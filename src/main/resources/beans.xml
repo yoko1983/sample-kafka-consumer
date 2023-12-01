@@ -1,0 +1,67 @@
+<!-- kafka-consumer.xml -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:kafka="http://www.springframework.org/schema/kafka"
+       xsi:schemaLocation="
+          http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.springframework.org/schema/kafka
+          http://www.springframework.org/schema/kafka/spring-kafka.xsd">
+
+    <!-- Kafka Consumer Configuration -->
+    <bean id="kafkaConsumer"
+          class="org.springframework.kafka.core.DefaultKafkaConsumerFactory">
+        <constructor-arg>
+            <map>
+                <entry key="bootstrap.servers" value="localhost:9092"/>
+                <entry key="group.id" value="G1"/>
+                <entry key="key.deserializer" value="org.apache.kafka.common.serialization.StringDeserializer"/>
+                <entry key="value.deserializer" value="org.apache.kafka.common.serialization.StringDeserializer"/>
+            </map>
+        </constructor-arg>
+    </bean>
+
+    <!-- Message Listener Container -->
+    <bean id="messageListenerContainer3"
+          class="org.springframework.kafka.listener.ConcurrentMessageListenerContainer">
+        <constructor-arg ref="kafkaConsumer"/>
+        <constructor-arg>
+            <list>
+            	<bean class="org.springframework.kafka.listener.ContainerProperties">
+    				<constructor-arg name="topics" value="${kafka3.topic}"/>
+					<property name="messageListener" ref="kafka3"/>
+					<property name="ackMode" value="MANUAL"/>
+				</bean>
+            </list>
+        </constructor-arg>
+		<property name="concurrency" value="${kafka3.concurrency}"/>
+    </bean>
+
+    <!-- Your Message Listener Implementation -->
+    <bean id="kafka3" class="com.example.demo.KafkaConsumer">
+	    <property name="consumerName" value="${kafka3.name}"/>
+    </bean>
+
+    <!-- Message Listener Container -->
+    <bean id="messageListenerContainer2"
+          class="org.springframework.kafka.listener.ConcurrentMessageListenerContainer">
+        <constructor-arg ref="kafkaConsumer"/>
+        <constructor-arg>
+            <list>
+            	<bean class="org.springframework.kafka.listener.ContainerProperties">
+    				<constructor-arg name="topics" value="${kafka2.topic}"/>
+					<property name="messageListener" ref="kafka2"/>
+					<property name="ackMode" value="MANUAL"/>
+				</bean>
+            </list>
+        </constructor-arg>
+		<property name="concurrency" value="${kafka2.concurrency}"/>
+    </bean>
+
+    <!-- Your Message Listener Implementation -->
+    <bean id="kafka2" class="com.example.demo.KafkaConsumer">
+	    <property name="consumerName" value="${kafka2.name}"/>
+    </bean>
+
+</beans>
