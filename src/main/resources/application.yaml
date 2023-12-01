@@ -1,0 +1,21 @@
+server:
+  port: 28080
+  
+kafka:
+  bootstrap-servers: localhost:9092
+  group-id: G1
+  topic: topic-11
+
+kafka1:
+  name: kafka1
+  group-id: G1
+  topic: topic-11
+  concurrency: 1
+  enabled: false
+
+kafka2:
+  name: kafka2
+  group-id: G1
+  topic: topic-11
+  concurrency: 2
+  enabled: false
